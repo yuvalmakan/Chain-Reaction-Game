@@ -1,0 +1,101 @@
+body{
+    background-color: purple;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h1{
+    position: absolute;
+    top: 1%;
+    left: 0.5%;
+}
+
+#table{
+    border: 5px solid black;
+    /* display: flex; */
+    /* align-items: center;
+    justify-content: center; */
+    position: absolute;
+    top: 15%;
+    left: 33%;
+    height: auto;
+    width: 23vw;
+    background-color: black;
+    display: grid;
+    grid-template-columns: repeat(6,1fr);
+    grid-template-rows: repeat(12,1fr);
+    gap: 1px;
+}
+
+.box{
+    padding: 0;
+    width: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15%;
+}
+
+/* #timer{
+    position: absolute;
+    top: 2%;
+    left: 82vw;
+}
+
+#time{
+    position: absolute;
+    top: 2%;
+    left: 90vw;
+} */
+
+#gtimer{
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    display: flex;
+    gap: 3px;
+}
+
+#ptimer{
+    position: absolute;
+    top: 6%;
+    right: 2%;
+    display: flex;
+    gap: 3px;
+}
+
+#score{
+    position: absolute;
+    top: 10%;
+    right: 2%;
+    display: flex;
+    gap: 3px;
+}
+
+.circle{
+    border: 2px solid black;
+    height: 25%;
+    width: 25%;
+    border-radius: 50%;
+
+}
+
+p{
+    display: inline;
+    font-size: 3vw;
+}
+
+span{
+    font-size: 2vw;
+}
+
+#pauseButton{
+    position: absolute;
+    bottom: 20%;
+    right: 10%;
+    font-size: 5vw;
+    border-radius: 20%;
+    border: 3px solid black;
+}
