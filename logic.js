@@ -20,10 +20,14 @@ let pause = document.querySelector("#pauseButton");
 
 
 pause.addEventListener("click", () => {
-    if (pause.innerText != "Resume")
+    if (pause.innerText != "Resume"){
         pause.innerText = "Resume";
-    else if (pause.innerText != "Pause")
+        playing = false;
+    }
+    else if (pause.innerText != "Pause"){
         pause.innerText = "Pause";
+        playing = true;
+    }
 })
 
 setInterval( () => {
@@ -69,6 +73,9 @@ function pressed(box){
     
     let cap = capacity(box);
     let colour = counter%2==0? 'red':'blue';
+
+    if (!playing)
+        return 0;
 
     if (counter != 0 && counter != 1 && divList.length == 0)
         return 0;
@@ -161,6 +168,7 @@ if (!playing){
 // a) game timer runs out, the player with most number of points wins
 // b) player timer runs out. Other player wins
 // c) whole board conquered by that player, he wins
+// Also make sure that after wnining no player can add their blobs
 
 function win(col){
     document.querySelector("#turn").innerText = col;
