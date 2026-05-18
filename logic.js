@@ -2,7 +2,21 @@ let table = document.querySelector("#table");
 let counter = 0;
 let rcount = document.querySelector("#rcount");
 let bcount = document.querySelector("#bcount");
-let count = {"red":rcount,"blue":bcount};
+let gcount = document.querySelector("#gcount");
+let ocount = document.querySelector("#ocount");
+
+let numCol = prompt("How many player do you want between 2 and 4","2");
+while (+numCol!=2 && +numCol!=3 && +numCol!=4){
+    numCol = prompt("I'm sorry, but the number can only be 2 or 3 or 4","2");
+}
+
+let colList = ["red","blue"]
+if (numCol==3 || numCol==4)
+    colList.push("green")
+if (numCol==4)
+    colList.push("orange")
+
+let count = {"red":rcount,"blue":bcount,"green":gcount,"orange":ocount};
 let playing = true;
 
 for (let i=0; i<72; i++){
@@ -37,9 +51,10 @@ setInterval( () => {
         let gtimer = document.querySelector("#time").innerText;
         document.querySelector("#ptime").innerText--;
         if (ptimer <= 0)
-            win(counter%2==0? 'blue':'red');
+            win(colList[counter%numCol]);
+        const maxCol = Object.keys(count).reduce((a,b) => count[a] > count[b]? a:b);
         if (gtimer <= 0)
-            win(count['blue'].innerText>count['red'].innerText? 'blue':'red');
+            win(maxCol);
     }  
 },1000)
 
@@ -61,6 +76,34 @@ let capacity = (box) => {
     }
 }
 
+
+function colDel() {
+    let initialNumCol = colList.length;
+    if (counter < initialNumCol) {
+        return 0;
+    }
+
+    for (let i = colList.length - 1; i >= 0; i--) {
+        let col = colList[i];
+        let num = 0;
+
+        boxList.forEach((button) => {
+            if (button.childNodes.length > 0 && button.childNodes[0].style.backgroundColor === col) {
+                num++;
+            }
+        });
+
+        if (num == 0) {
+            colList.splice(i, 1);
+            numCol--;
+            
+            if (i <= counter % (numCol + 1)) {
+                counter--;
+            }
+        }
+    }
+}
+
 // This makes so that when we press the button, either of 3 things will happen: 
 // a) If one of the first 2 turns then fill to capacity-1
 // b) if subsequent turns then  add 1 if capacity not reached with adding 1
@@ -72,19 +115,24 @@ function pressed(box){
     let divList = box.childNodes;
     
     let cap = capacity(box);
-    let colour = counter%2==0? 'red':'blue';
+    let colour = colList[counter%numCol];
 
     if (!playing)
         return 0;
 
-    if (counter != 0 && counter != 1 && divList.length == 0)
+    if ( counter>=colList.length && divList.length == 0)
         return 0;
 
     if (divList.length){
         if (colour != divList[0].style.backgroundColor)  
             return 0;
     }
-                           
+
+    let move_tracker = document.querySelector("#move_tracker");
+    let move = document.createElement("div");
+    move.setAttribute("class","moves");
+    move.innerText = "The "+colour + " Player clicked on column: "+(box.id%10+1)+" & row: "+(Math.trunc(box.id /10)+1)
+    move_tracker.append(move);                         
 
     let added = (box,colour,cap) => {
         let i = +Math.trunc(box.id /10);
@@ -124,9 +172,10 @@ function pressed(box){
         }
         new Audio("pop.mp3").play();
         count[colour].innerText++;
+        // colDel();
     }
 
-    if (counter==0 || counter==1){
+    if ( counter < colList.length){
         for (let i=0; i<cap-1; i++){
             let circle = document.createElement("div");
             circle.setAttribute("class","circle");
@@ -140,10 +189,10 @@ function pressed(box){
     else{
         added(box,colour,cap);
     }
-    document.querySelector("#turn").innerText = counter%2==0?"Blue":"Red";
-    document.querySelector("#ptime").innerText = 15; 
 
     counter++;
+    document.querySelector("#turn").innerText = colList[counter%numCol];
+    document.querySelector("#ptime").innerText = 15;     
 }
 
 // The actual pressing
@@ -154,15 +203,10 @@ boxList.forEach( (box) => {
 
 setInterval( () => {
     if (document.querySelector("#win").innerText != "player has won"){
-        conquered("red");
-        conquered("blue");
+        colList.forEach( (col) => conquered(col));     
     }
-    
+    colDel();
 },100)
-
-if (!playing){
-    
-}
 
 // Win Conditions:
 // a) game timer runs out, the player with most number of points wins
@@ -178,7 +222,7 @@ function win(col){
 
 function conquered(col){
     let i = 0;
-    if (counter==0 || counter==1)
+    if ( counter < colList.length)
         return 0;
     for (;i<72;i++){
         if (boxList[i].childNodes.length==0)
@@ -188,5 +232,4 @@ function conquered(col){
     }
     if (i==72)
         win(col);
-    console.log(i);
 }
