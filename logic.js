@@ -34,13 +34,12 @@ let pause = document.querySelector("#pauseButton");
 
 
 pause.addEventListener("click", () => {
-    if (pause.innerText != "Resume"){
-        pause.innerText = "Resume";
-        playing = false;
-    }
-    else if (pause.innerText != "Pause"){
+    playing = !playing;
+    if (playing){
         pause.innerText = "Pause";
-        playing = true;
+    }
+    else {
+        pause.innerText = "Resume";
     }
 })
 
